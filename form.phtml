@@ -1,0 +1,38 @@
+
+<div class="mp"></div>
+<script src="https://www.mercadopago.com/v2/security.js" view="checkout"></script>
+<script src="https://sdk.mercadopago.com/js/v2"></script>
+        <div class="cho-container"></div>
+        <script>
+        const mp = new MercadoPago("<?php echo $this->publicKey; ?>", {
+                locale: 'es-MX'
+        });
+
+        const checkout = mp.checkout({
+            preference: {
+                id: '<?=$this->pregerenceId?>'
+            },
+            //autoOpen: true,
+            //render: {
+            //        container: '.mp', 
+            //        label: 'Pagar MercadoPago',
+           // }
+        });
+</script>
+<input type="button" class="app-btns primary mercadopagobtn"  value="Pagar con MercadoPago">
+
+
+<script>
+    function mercadopagoOpenHandler(e){
+        
+        checkout.open();
+        return true;
+    }
+
+    $('.mercadopagobtn').on('click', function(e) {
+        e.preventDefault();
+        $('.mercadopagobtn').hasClass('disabled')
+        mercadopagoOpenHandler();
+        
+    });
+</script>
