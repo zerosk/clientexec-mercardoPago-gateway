@@ -6,7 +6,7 @@ Plugin for Mercado Pago payment gateway.
 
 PHP 5.6, 7.1 or higher
 
-## 💻 Intalacion
+## 💻 Installation
 
     Descargar el SKD de mercadopago en la carpeta del plugin
 
