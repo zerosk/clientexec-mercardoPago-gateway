@@ -156,7 +156,7 @@ class PluginMercadopago extends GatewayPlugin
         $notification_url =  CE_Lib::getSoftwareURL() . '/plugins/gateways/mercadopago/callback.php?source_news=webhooks';
 
         MercadoPago\SDK::setAccessToken($accessToken);
-        //MercadoPago\SDK::setPlatformId("PLATFORM_ID");
+        MercadoPago\SDK::setIntegratorId("dev_f299a72e3c2611ecabdf0242ac130004");
 
         if( isset($_GET['collection_status']) && isset($_GET['external_reference'])) {
 
