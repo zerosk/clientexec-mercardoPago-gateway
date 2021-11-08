@@ -12,29 +12,24 @@ class PluginMercadopagoCallback extends PluginCallback
 {
     function processCallback()
     {
-
         if ($this->settings->get('plugin_mercadopago_Modo de prueba') == '1') {
             $accessToken = $this->settings->get('plugin_mercadopago_Test Token');
             
         } else {
             $accessToken = $this->settings->get('plugin_mercadopago_Live Secret Key');
         }
-        //echo '<pre>';
-        //print_r($this->settings);
-        //echo $accessToken;
-        //echo "\n -----\n";
+  
         CE_Lib::log(1, 'Mercadopago callback invoked');
         MercadoPago\SDK::setAccessToken($accessToken);
-        //MercadoPago\SDK::setPlatformId("PLATFORM_ID");
+        
 
         $response = file_get_contents("php://input");
         $response = json_decode($response, true);
-        //print_r($response);
-        //exit();
+  
         CE_Lib::log(4, "Mercadopago Response: {$response}");
 
         if ($response['type'] == 'payment') {
-            //echo $response['action'];
+            
 
             try {
                 $payment = MercadoPago\Payment::find_by_id($response['id']);

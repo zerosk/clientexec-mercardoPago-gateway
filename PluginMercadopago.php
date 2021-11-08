@@ -43,6 +43,11 @@ class PluginMercadopago extends GatewayPlugin
                 'description'   => 'Client password',
                 'value'         =>''
             ),
+            'Fb Pixel'=> array(
+                'type'          => 'text',
+                'description'   => 'Id del pixel de FB',
+                'value'         =>''
+            ),
             lang('Modo de prueba') => array(
                 'type'        => 'yesno',
                 'description' => lang('Activar modo de pruebas'),
@@ -77,7 +82,7 @@ class PluginMercadopago extends GatewayPlugin
 
     function singlePayment($params)
     {
-        die("HOLA");
+
     }
 
 
@@ -138,47 +143,9 @@ class PluginMercadopago extends GatewayPlugin
         //
         //2475335432168087
         //APP_USR-2daeb1d3-64ad-4df1-9f85-57b08e48a6cf
-        
-        
-        
-        
-
   
     }
 
-    public function testh($params)
-    {
-        $html = <<<HTML
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>boton</title>
-        </head>
-        <body>
-        
-        <script src="https://sdk.mercadopago.com/js/v2"></script>
-        <div class="cho-container"></div>
-        <script>
-        const mp = new MercadoPago("$publicKey", {
-                locale: 'es-AR'
-        });
-
-        mp.checkout({
-            preference: {
-                id: '$preference->id'
-            },
-            autoOpen: true,
-            render: {
-                    container: '.cho-container', 
-                    label: 'Pagar',
-            }
-        });
-        </script>
-        HTML;
-        echo($html);
-        
-
-    }
     public function getForm($params)
     {
 
@@ -186,7 +153,7 @@ class PluginMercadopago extends GatewayPlugin
             $accessToken = $this->getVariable('Test Token');
             $this->view->publicKey = $this->getVariable('Test public Key');
         } else {
-            $accessToken = $this->getVariable('Live Secret Key');
+            $accessToken = $this->getVariable('Access Token');
             $this->view->publicKey = $this->getVariable('Public Key');
         }
 
@@ -194,39 +161,9 @@ class PluginMercadopago extends GatewayPlugin
         $notification_url =  CE_Lib::getSoftwareURL() . '/plugins/gateways/mercadopago/callback.php?source_news=webhooks';
 
         MercadoPago\SDK::setAccessToken($accessToken);
-        //MercadoPago\SDK::setPlatformId("PLATFORM_ID");
+        MercadoPago\SDK::setIntegratorId("dev_f299a72e3c2611ecabdf0242ac130004");
 
         if( isset($_GET['collection_status']) && isset($_GET['external_reference'])) {
-
-            /*
-            https://altavy.com/panel22/
-            index.php?fuse=billing&paid=1
-            &controller=invoice&view=invoice&id=1002
-            &collection_id=1242536277
-            &collection_status=approved
-            &payment_id=1242536277
-            &status=approved
-            &external_reference=1002
-            &payment_type=credit_card
-            &merchant_order_id=3450352166
-            &preference_id=838392995-813befb1-eb23-4a9f-93c7-ffaadca38650
-            &site_id=MLM
-            &processing_mode=aggregator
-            &merchant_account_id=null
-            */
-            
-            
-            /* //DATOS DE REFERENCIA    
-            $payment = MercadoPago\Payment::find_by_id($_GET['payment_id']);
-            echo "<pre>";
-            echo $payment->status;
-            echo "<br>";
-            echo $payment->id;
-            echo $payment->transaction_amount;
-
-            //print_r($this->user->customFields->customFields[8]);
-            die();
-            */
 
             try {
                 $payment = MercadoPago\Payment::find_by_id($_GET['payment_id']);
@@ -313,6 +250,19 @@ class PluginMercadopago extends GatewayPlugin
             ),
             "installments" => 1
         );
+
+        if ($this->getVariable('FB Pixel') != '') {
+            
+            $preference->tracks = array(
+                array(
+                  'type' => 'facebook_ad',
+                  'values'=> array(
+                    'pixel_id' => $this->getVariable('FB Pixel'),
+                  )
+                )
+              );
+              
+        }
         
 
         $preference->save();
